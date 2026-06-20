@@ -156,8 +156,8 @@ async function viewOrderDetails(orderId) {
                     <tr style="border-bottom: 1px solid #e2e8f0;">
                         <td style="padding: 0.75rem;">${item.product_name}</td>
                         <td style="padding: 0.75rem; text-align: center;">${item.quantity}</td>
-                        <td style="padding: 0.75rem; text-align: right;">$${parseFloat(item.price).toFixed(2)}</td>
-                        <td style="padding: 0.75rem; text-align: right;">$${(item.quantity * item.price).toFixed(2)}</td>
+                        <td style="padding: 0.75rem; text-align: right;">$${parseFloat(item.unit_price).toFixed(2)}</td>
+                        <td style="padding: 0.75rem; text-align: right;">$${(item.quantity * item.unit_price).toFixed(2)}</td>
                     </tr>
                 `;
             });
