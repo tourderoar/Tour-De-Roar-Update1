@@ -183,8 +183,7 @@ function updateEventRegistration($db, $payment_intent, $metadata) {
     $stmt = $db->prepare("
         UPDATE event_registrations 
         SET payment_status = 'completed', 
-            amount_paid = ?,
-            paid_at = NOW()
+            amount_paid = ?
         WHERE id = ?
     ");
     $stmt->execute([$amount_paid, $registration_id]);
@@ -234,8 +233,7 @@ function updateDonation($db, $payment_intent, $metadata) {
     $stmt = $db->prepare("
         UPDATE donation_payments 
         SET payment_status = 'completed',
-            amount_paid = ?,
-            paid_at = NOW()
+            amount_paid = ?
         WHERE id = ?
     ");
     $stmt->execute([$amount_paid, $donation_id]);
@@ -285,8 +283,7 @@ function updateSponsorship($db, $payment_intent, $metadata) {
     $stmt = $db->prepare("
         UPDATE sponsorship_payments 
         SET payment_status = 'completed',
-            amount_paid = ?,
-            paid_at = NOW()
+            amount_paid = ?
         WHERE id = ?
     ");
     $stmt->execute([$amount_paid, $sponsorship_id]);
@@ -335,8 +332,7 @@ function updateStoreOrder($db, $payment_intent, $metadata) {
     // Update order status
     $stmt = $db->prepare("
         UPDATE orders 
-        SET payment_status = 'completed',
-            paid_at = NOW()
+        SET payment_status = 'completed'
         WHERE id = ?
     ");
     $stmt->execute([$order_id]);
