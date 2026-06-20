@@ -50,18 +50,43 @@ if (strlen($message) > 5000) {
 
 $db = get_db();
 
+// Rate limiting: Check if this IP has submitted in the last 5 minutes
+$ip_address = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+$stmt = $db->prepare("
+    SELECT COUNT(*) as submission_count 
+    FROM contact_submissions 
+    WHERE ip_address = ? 
+    AND created_at > DATE_SUB(NOW(), INTERVAL 5 MINUTE)
+");
+$stmt->execute([$ip_address]);
+$recent_submissions = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($recent_submissions['submission_count'] > 0) {
+    json_error('Please wait a few minutes before submitting another message', 429);
+}
+
+// Honeypot check - if this field is filled, it's likely a bot
+if (!empty($input['website'])) {
+    // Silently fail for bots
+    json_success([
+        'message' => 'Your message has been sent successfully. We\'ll get back to you soon!'
+    ]);
+    exit;
+}
+
 try {
     // Insert into database
     $stmt = $db->prepare("
-        INSERT INTO contact_submissions (name, email, subject, message, created_at)
-        VALUES (:name, :email, :subject, :message, NOW())
+        INSERT INTO contact_submissions (name, email, subject, message, ip_address, created_at)
+        VALUES (:name, :email, :subject, :message, :ip_address, NOW())
     ");
     
     $stmt->execute([
         'name' => $name,
         'email' => $email,
         'subject' => $subject,
-        'message' => $message
+        'message' => $message,
+        'ip_address' => $ip_address
     ]);
     
     // Send auto-reply email (only on production, logged locally)
@@ -87,6 +112,39 @@ try {
     ";
     
     send_mail($email, $name, $email_subject, $email_body);
+    
+    // Notify all admins about the new contact form submission
+    $stmt = $db->prepare("SELECT email, name FROM admins WHERE status = 'active'");
+    $stmt->execute();
+    $admins = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    foreach ($admins as $admin) {
+        if (!empty($admin['email'])) {
+            $admin_subject = "New Contact Form Submission: {$subject}";
+            $admin_body = "
+                <h2 style='color: #805AD5;'>New Contact Form Submission</h2>
+                <p>A new message has been received through the contact form.</p>
+                
+                <div style='background: #f7fafc; padding: 20px; border-radius: 8px; margin: 20px 0;'>
+                    <p><strong>From:</strong> {$name}</p>
+                    <p><strong>Email:</strong> <a href='mailto:{$email}'>{$email}</a></p>
+                    <p><strong>Subject:</strong> {$subject}</p>
+                    <p><strong>Submitted:</strong> " . date('F j, Y g:i A') . "</p>
+                </div>
+                
+                <div style='background: #ffffff; padding: 20px; border-left: 4px solid #FF6B1A; margin: 20px 0;'>
+                    <p><strong>Message:</strong></p>
+                    <p>" . nl2br(htmlspecialchars($message)) . "</p>
+                </div>
+                
+                <p style='color: #718096; font-size: 14px; margin-top: 30px;'>
+                    <strong>Action Required:</strong> Please respond to this inquiry within 24 hours.
+                </p>
+            ";
+            
+            send_mail($admin['email'], $admin['name'], $admin_subject, $admin_body);
+        }
+    }
     
     json_success([
         'message' => 'Your message has been sent successfully. We\'ll get back to you soon!',

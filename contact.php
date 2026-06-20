@@ -96,7 +96,36 @@ require_once __DIR__ . '/includes/header.php';
         </div>
 
         <div class="bg-white rounded-lg shadow-lg p-8">
-            <form id="contactForm" onsubmit="event.preventDefault(); alert('Phase 3 will enable contact form submission via API');">
+            <!-- Success Alert -->
+            <div id="success-alert" class="hidden mb-6 bg-green-50 border-l-4 border-green-500 text-green-700 p-4 rounded">
+                <div class="flex items-start">
+                    <i class="fas fa-check-circle text-xl mr-3 mt-0.5"></i>
+                    <div>
+                        <strong>Success!</strong>
+                        <p id="success-message" class="mt-1"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Error Alert -->
+            <div id="error-alert" class="hidden mb-6 bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded">
+                <div class="flex items-start">
+                    <i class="fas fa-exclamation-circle text-xl mr-3 mt-0.5"></i>
+                    <div>
+                        <strong>Error!</strong>
+                        <p id="error-message" class="mt-1"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <form id="contactForm" method="post" action="javascript:void(0);">
+                <!-- Honeypot field - hidden from users, catches bots -->
+                <input type="text" name="website" id="website" 
+                       style="position: absolute; left: -9999px;" 
+                       tabindex="-1" 
+                       autocomplete="new-password"
+                       aria-hidden="true">
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div>
                         <label for="firstName" class="block text-gray-700 text-sm font-bold mb-2">
@@ -167,7 +196,8 @@ require_once __DIR__ . '/includes/header.php';
                 </div>
 
                 <div class="text-center">
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-colors">
+                    <button type="submit" id="submit-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-colors">
+                        <i class="fas fa-paper-plane mr-2"></i>
                         Send Message
                     </button>
                 </div>
@@ -216,3 +246,97 @@ require_once __DIR__ . '/includes/header.php';
 </section>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+
+<script>
+$(document).ready(function() {
+    $('#contactForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        // Hide previous alerts
+        $('#success-alert').addClass('hidden');
+        $('#error-alert').addClass('hidden');
+        
+        // Get form data
+        const firstName = $('#firstName').val().trim();
+        const lastName = $('#lastName').val().trim();
+        const name = (firstName + ' ' + lastName).trim();
+        
+        const formData = {
+            name: name,
+            email: $('#email').val().trim(),
+            subject: $('#subject').val(),
+            message: $('#message').val().trim(),
+            website: $('#website').val() // Honeypot
+        };
+        
+        // Basic validation
+        if (!firstName || !lastName) {
+            showError('Please enter your full name');
+            return;
+        }
+        
+        if (!formData.email) {
+            showError('Please enter your email address');
+            return;
+        }
+        
+        if (!formData.subject) {
+            showError('Please select a subject');
+            return;
+        }
+        
+        if (!formData.message || formData.message.length < 10) {
+            showError('Please enter a message (at least 10 characters)');
+            return;
+        }
+        
+        // Disable submit button
+        const $submitBtn = $('#submit-btn');
+        $submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i>Sending...');
+        
+        // Submit to API
+        $.ajax({
+            url: APP_URL + '/api/contact/',
+            type: 'POST',  // Use 'type' for jQuery compatibility
+            headers: {
+                'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: JSON.stringify(formData),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    showSuccess(response.message);
+                    $('#contactForm')[0].reset();
+                    
+                    // Scroll to success message
+                    $('html, body').animate({
+                        scrollTop: $('#success-alert').offset().top - 100
+                    }, 500);
+                } else {
+                    showError(response.error || 'Failed to send message');
+                }
+                $submitBtn.prop('disabled', false).html('<i class="fas fa-paper-plane mr-2"></i>Send Message');
+            },
+            error: function(xhr) {
+                let errorMsg = 'Failed to send message. Please try again.';
+                if (xhr.responseJSON && xhr.responseJSON.error) {
+                    errorMsg = xhr.responseJSON.error;
+                }
+                showError(errorMsg);
+                $submitBtn.prop('disabled', false).html('<i class="fas fa-paper-plane mr-2"></i>Send Message');
+            }
+        });
+    });
+    
+    function showSuccess(message) {
+        $('#success-message').text(message);
+        $('#success-alert').removeClass('hidden');
+    }
+    
+    function showError(message) {
+        $('#error-message').text(message);
+        $('#error-alert').removeClass('hidden');
+    }
+});
+</script>
