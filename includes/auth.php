@@ -82,7 +82,7 @@ function session_init(): void
 
 /**
  * Returns the currently logged-in user's data array, or null if no user is logged in.
- * The array contains: id, first_name, last_name, email (set at login time).
+ * The array contains: id, first_name, last_name, email, phone (set at login time).
  *
  * @return array|null
  */

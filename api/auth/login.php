@@ -52,7 +52,7 @@ try {
     
     // Look up user by email
     $stmt = $db->prepare("
-        SELECT id, first_name, last_name, email, password_hash, status
+        SELECT id, first_name, last_name, email, phone, password_hash, status
         FROM users
         WHERE email = ?
     ");
@@ -75,7 +75,8 @@ try {
         'id' => $user['id'],
         'email' => $user['email'],
         'first_name' => $user['first_name'],
-        'last_name' => $user['last_name']
+        'last_name' => $user['last_name'],
+        'phone' => $user['phone']
     ];
     
     // Regenerate session ID for security (prevents session fixation)
