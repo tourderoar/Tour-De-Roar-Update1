@@ -11,6 +11,12 @@ config.php
 # Composer dependencies
 vendor/
 
+# User uploads (keep folder structure with .gitkeep)
+images/events/*
+!images/events/.gitkeep
+images/products/*
+!images/products/.gitkeep
+
 # Documentation (except README)
 *.md
 !README.md
