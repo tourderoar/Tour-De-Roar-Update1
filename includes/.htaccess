@@ -1,0 +1,11 @@
+# includes/.htaccess
+# Location: /tour_update/includes/.htaccess
+#
+# Blocks ALL direct HTTP access to this directory.
+# The files in includes/ are internal PHP helpers — they must only be
+# loaded via require_once from other PHP files, never requested directly
+# by a browser. Without this, someone could browse to:
+#   http://localhost/tour_update/includes/config.php  ← blocked
+#   http://localhost/tour_update/includes/db.php      ← blocked
+
+Require all denied

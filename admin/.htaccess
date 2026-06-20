@@ -1,0 +1,24 @@
+# admin/.htaccess
+# Location: /tour_update/admin/.htaccess
+#
+# Maps clean admin URLs to their .php files.
+# Access control is enforced by PHP session checks (require_admin()),
+# not Apache — this keeps the login page accessible while blocking the rest.
+#
+# Examples:
+#   /admin           →  admin/index.php   (dashboard)
+#   /admin/login     →  admin/login.php
+#   /admin/events    →  admin/events.php
+
+Options -Indexes
+
+RewriteEngine On
+RewriteBase /tour_update/admin/
+
+# Root /admin request → index.php (dashboard)
+RewriteRule ^$ index.php [L]
+
+# Clean URL: /admin/login → login.php, /admin/events → events.php, etc.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-zA-Z0-9_-]+)/?$ $1.php [L]

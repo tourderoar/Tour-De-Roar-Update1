@@ -1,0 +1,36 @@
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
+
+# Config with secrets
+config.php
+
+# Composer dependencies
+vendor/
+
+# Documentation (except README)
+*.md
+!README.md
+
+# Logs
+logs/*.log
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backups
+*.bak
+*.backup
+*~
+*.tmp
+
+setup/

@@ -1,0 +1,16 @@
+{
+    "name": "tourderoar/tour-de-roar",
+    "description": "Tour de Roar cycling events and fundraising platform",
+    "type": "project",
+    "require": {
+        "php": "^8.0",
+        "stripe/stripe-php": "^13.0"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

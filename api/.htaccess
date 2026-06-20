@@ -1,0 +1,16 @@
+# api/.htaccess
+# Location: /tour_update/api/.htaccess
+#
+# Routes ALL requests inside /api/ to api/index.php (the API router).
+# The router reads the URI path and dispatches to the correct handler.
+#
+# Example: GET /api/events  →  api/index.php  →  dispatches to events handler
+
+Options -Indexes
+
+RewriteEngine On
+RewriteBase /tour_update/api/
+
+# Route everything to index.php (except index.php itself to avoid loops)
+# This ensures all API requests go through the router, not the endpoint files directly
+RewriteRule ^(?!index\.php$).* index.php [L,QSA]

@@ -1,0 +1,2 @@
+# This file ensures the logs folder is tracked by git even when empty
+# error.log and mail.log will be created here at runtime

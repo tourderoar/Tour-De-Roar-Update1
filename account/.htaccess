@@ -1,0 +1,25 @@
+# account/.htaccess
+# Location: /tour_update/account/.htaccess
+#
+# Maps clean account URLs to their .php files.
+# Access control is enforced at the PHP level (require_user() in middleware.php).
+#
+# Examples:
+#   /account               →  account/dashboard.php
+#   /account/login         →  account/login.php
+#   /account/register      →  account/register.php
+#   /account/activate      →  account/activate.php
+#   /account/reset-password →  account/reset-password.php
+
+Options -Indexes
+
+RewriteEngine On
+RewriteBase /tour_update/account/
+
+# Root /account request → dashboard.php
+RewriteRule ^$ dashboard.php [L]
+
+# Clean URL mapping for all account pages
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-zA-Z0-9_-]+)/?$ $1.php [L]

@@ -1,0 +1,53 @@
+# Root .htaccess
+# Location: /tour_update/.htaccess
+#
+# Controls URL rewriting for the entire Tour de Roar application.
+#
+# WHAT THIS DOES:
+#   1. Prevents directory listings (security hardening)
+#   2. Blocks direct HTTP access to config.php
+#   3. Passes requests for api/, admin/, account/ sub-folders to their own .htaccess files
+#   4. Maps clean URLs to .php files: /events -> events.php
+#
+# PRODUCTION: Change RewriteBase from /tour_update/ to /
+
+Options -Indexes
+
+RewriteEngine On
+
+# ── RewriteBase ──────────────────────────────────────────────────────────
+# LOCAL:      Project is in a subdirectory of htdocs
+# PRODUCTION: Change this to / when the project is at the domain root
+RewriteBase /tour_update/
+
+# ── Security: block direct access to config.php ─────────────────────────
+# config.php contains credentials — it must never be served as a web page.
+# [F] = 403 Forbidden, [L] = stop processing rules
+RewriteRule ^config\.php$ - [F,L]
+
+# ── Security: block direct access to includes/ and logs/ ─────────────────
+# These folders have their own deny-all .htaccess files, but this adds a
+# second layer of protection at the root level.
+# Note: setup/ is NOT blocked here because setup/install.php has its own
+# APP_ENV check that returns 403 on production. This allows local access.
+RewriteRule ^(includes|logs)/.*$ - [F,L]
+
+# ── Pass sub-application folders to their own .htaccess files ───────────
+# If the request starts with api/, admin/, or account/, Apache will handle
+# it using that folder's own .htaccess. We don't rewrite these here.
+RewriteRule ^api/       - [L]
+RewriteRule ^admin/     - [L]
+RewriteRule ^account/   - [L]
+
+# ── Clean URL rewriting ──────────────────────────────────────────────────
+# Maps /events -> events.php, /about -> about.php, etc.
+#
+# Conditions — only rewrite if:
+#   !-f   the requested URL is NOT an existing file (e.g. CSS, images still load normally)
+#   !-d   the requested URL is NOT an existing directory
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Match a single path segment of letters, numbers, hyphens, underscores
+# and map it to the corresponding .php file
+RewriteRule ^([a-zA-Z0-9_-]+)/?$ $1.php [L]

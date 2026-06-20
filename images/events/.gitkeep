@@ -1,0 +1,2 @@
+# This file ensures the events folder is tracked by git even when empty
+# Event images uploaded by admins will be stored here

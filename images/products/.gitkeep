@@ -1,0 +1,2 @@
+# This file ensures the products folder is tracked by git even when empty
+# Product images uploaded by admins will be stored here

@@ -1,0 +1,8 @@
+# logs/.htaccess
+# Location: /tour_update/logs/.htaccess
+#
+# Blocks ALL direct HTTP access to the logs directory.
+# logs/mail.log contains full email content including activation tokens and
+# password reset links — it must NEVER be publicly readable.
+
+Require all denied
