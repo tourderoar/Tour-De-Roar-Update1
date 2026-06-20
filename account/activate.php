@@ -39,19 +39,11 @@ if (empty($token)) {
         } elseif ($token_data['is_valid'] != 1) {
             $error = 'This activation link has expired. Please request a new one.';
         } elseif ($token_data['status'] === 'active') {
-            // Account is already active - just log them in
-            $_SESSION['user'] = [
-                'id' => $token_data['user_id'],
-                'email' => $token_data['email'],
-                'first_name' => $token_data['first_name'],
-                'last_name' => $token_data['last_name']
-            ];
-            
-            // Delete the used token
+            // Account is already active - delete token and redirect to login
             $stmt = $db->prepare("DELETE FROM user_activation_tokens WHERE token = ?");
             $stmt->execute([$token]);
             
-            header('Location: ' . APP_URL . '/account/dashboard?activated=already');
+            header('Location: ' . APP_URL . '/account/login?redirect=%2Faccount%2Fdashboard');
             exit;
         } else {
             // Activate the account
@@ -62,18 +54,8 @@ if (empty($token)) {
             $stmt = $db->prepare("DELETE FROM user_activation_tokens WHERE token = ?");
             $stmt->execute([$token]);
             
-            // Log the user in automatically
-            $_SESSION['user'] = [
-                'id' => $token_data['user_id'],
-                'email' => $token_data['email'],
-                'first_name' => $token_data['first_name'],
-                'last_name' => $token_data['last_name']
-            ];
-            
-            // Regenerate session ID for security
-            session_regenerate_id(true);
-            
-            header('Location: ' . APP_URL . '/account/dashboard?activated=success');
+            // Redirect to login with success message
+            header('Location: ' . APP_URL . '/account/login?activated=success&redirect=%2Faccount%2Fdashboard');
             exit;
         }
         

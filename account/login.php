@@ -110,6 +110,20 @@ if (strpos($redirect, 'http') !== 0) {
         display: block;
     }
     
+    .success-alert {
+        background: #f0fff4;
+        border-left: 4px solid #38a169;
+        color: #22543d;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        display: none;
+    }
+    
+    .success-alert.show {
+        display: block;
+    }
+    
     .submit-btn {
         width: 100%;
         background: linear-gradient(135deg, #3182CE 0%, #805AD5 100%);
@@ -199,6 +213,14 @@ if (strpos($redirect, 'http') !== 0) {
         </div>
         
         <div class="auth-body">
+            <!-- Success Alert -->
+            <div id="success-alert" class="success-alert">
+                <div class="flex items-start">
+                    <i class="fas fa-check-circle text-xl mr-3 mt-0.5"></i>
+                    <div id="success-message"></div>
+                </div>
+            </div>
+            
             <!-- Error Alert -->
             <div id="error-alert" class="error-alert">
                 <div class="flex items-start">
@@ -251,6 +273,17 @@ if (strpos($redirect, 'http') !== 0) {
 
 <script>
 $(document).ready(function() {
+    // Check for activation success message
+    const urlParams = new URLSearchParams(window.location.search);
+    const activated = urlParams.get('activated');
+    
+    if (activated === 'success') {
+        $('#success-message').html('<strong>Account activated successfully!</strong><br>Please sign in to continue.');
+        $('#success-alert').addClass('show');
+        // Clean up URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+    
     $('#login-form').on('submit', function(e) {
         e.preventDefault();
         
