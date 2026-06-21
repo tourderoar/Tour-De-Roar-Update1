@@ -28,9 +28,9 @@ require_once __DIR__ . '/includes/header.php';
             Every child is our child, and we're committed to spreading hope to vulnerable inner city children.
         </p>
         <div class="space-x-4">
-            <button onclick="openRegistration()" class="btn-primary">
+            <a href="<?= APP_URL ?>/events" class="btn-secondary">
                 <i class="fas fa-calendar mr-2"></i>Register for Event
-            </button>
+            </a>
             <a href="<?= APP_URL ?>/donate" class="btn-secondary">
                 <i class="fas fa-heart mr-2"></i>Donate Now
             </a>

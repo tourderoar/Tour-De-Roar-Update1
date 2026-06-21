@@ -135,9 +135,9 @@ require_once __DIR__ . '/includes/header.php';
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div class="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-2xl transition-shadow duration-300">
                 <div class="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden border-4" style="border-color: #FF6B1A;">
-                    <img src="<?= APP_URL ?>/images/events/paul_yellow_bike.jpg" alt="Paul Agbo" class="w-full h-full object-cover">
+                    <img src="<?= APP_URL ?>/images/logos/founder.jpeg" alt="Paul Agbo" class="w-full h-full object-cover">
                 </div>
-                <h3 class="text-xl font-bold mb-2" style="color: #805AD5;">Paul Agbo</h3>
+                <h3 class="text-xl font-bold mb-2" style="color: #805AD5;">Dcn Paul Agbo</h3>
                 <p class="text-gray-600 font-semibold mb-3">Founder & Executive Director</p>
                 <p class="text-gray-700 text-sm">Passionate cyclist and advocate for children's rights. Paul founded Tour de Roar with the vision of using cycling to create positive social impact.</p>
             </div>
