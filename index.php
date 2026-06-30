@@ -17,9 +17,7 @@ require_once __DIR__ . '/includes/header.php';
     </div>
     <div class="container mx-auto px-6 text-center relative z-10">
         <div class="mb-6">
-            <div class="h-48 w-48 bg-white bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-6 backdrop-blur-sm p-8">
-                <img src="<?= APP_URL ?>/images/logos/logo-white-version.png" alt="Tour de Roar Lion Logo" class="h-full w-full object-contain lion-logo">
-            </div>
+            <img src="<?= APP_URL ?>/images/logos/logo.jpeg" alt="Tour de Roar Lion Logo" class="h-32 w-auto mx-auto mb-6 lion-logo object-contain">
         </div>
         <h1 class="text-6xl font-bold mb-6 drop-shadow-lg"><i class="fas fa-heart text-roar-red"></i> Tour de Roar</h1>
         <p class="text-2xl mb-8 font-semibold drop-shadow">Cycling to Make a Difference!</p>

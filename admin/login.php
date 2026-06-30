@@ -39,7 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['admin'] = [
                 'id' => $admin['id'],
                 'name' => $admin['name'],
-                'email' => $admin['email']
+                'email' => $admin['email'],
+                'admin_type' => $admin['admin_type'] ?? 'admin'
             ];
             
             // Regenerate session ID for security

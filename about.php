@@ -15,7 +15,7 @@ require_once __DIR__ . '/includes/header.php';
 <section class="page-header">
     <div class="container mx-auto px-6 relative z-10">
         <div class="text-center">
-            <img src="<?= APP_URL ?>/images/logos/logo-white-version.png" alt="Tour de Roar Lion Logo" class="h-24 w-24 mx-auto mb-6 lion-logo">
+            <img src="<?= APP_URL ?>/images/logos/logo.jpeg" alt="Tour de Roar Lion Logo" class="h-32 w-auto mx-auto mb-6 lion-logo object-contain">
             <h1 class="text-5xl font-bold mb-4 drop-shadow-lg">About Tour de Roar</h1>
             <p class="text-xl drop-shadow">Learn about our mission to support children through cycling</p>
         </div>

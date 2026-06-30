@@ -33,11 +33,20 @@ try {
     
     // Format the events for frontend
     $formatted_events = array_map(function($event) {
+        $display_date = $event['event_date'];
+        if (!empty($event['event_date'])) {
+            $date_obj = DateTime::createFromFormat('Y-m-d', $event['event_date']);
+            if ($date_obj !== false) {
+                $display_date = $date_obj->format('l, F j, Y');
+            }
+        }
+
         return [
             'id' => (int)$event['id'],
             'title' => $event['title'],
             'description' => $event['description'],
             'event_date' => $event['event_date'],
+            'event_date_display' => $display_date,
             'time_start' => $event['time_start'],
             'location' => $event['location'],
             'distances' => $event['distances'],

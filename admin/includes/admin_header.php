@@ -29,6 +29,7 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<?= get_csrf_token() ?>">
     <title><?= htmlspecialchars($page_title ?? 'Admin Panel') ?> | Tour de Roar Admin</title>
     
     <!-- Tailwind CSS -->
@@ -442,6 +443,18 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
         <a href="<?= APP_URL ?>/admin/users" class="sidebar-nav-item <?= $current_page === 'users' ? 'active' : '' ?>">
             <i class="fas fa-users"></i>
             Users
+        </a>
+        
+        <?php if (($admin_user['admin_type'] ?? 'admin') === 'super_admin'): ?>
+        <a href="<?= APP_URL ?>/admin/admins" class="sidebar-nav-item <?= $current_page === 'admins' ? 'active' : '' ?>">
+            <i class="fas fa-user-shield"></i>
+            Administrators
+        </a>
+        <?php endif; ?>
+        
+        <a href="<?= APP_URL ?>/admin/profile" class="sidebar-nav-item <?= $current_page === 'profile' ? 'active' : '' ?>">
+            <i class="fas fa-user-circle"></i>
+            My Profile
         </a>
     </nav>
     

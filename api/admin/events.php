@@ -27,34 +27,36 @@ if ($method === 'GET') {
 // POST - Create new event
 if ($method === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
-    
+
     // Validate CSRF
     if (!isset($data['csrf_token']) || $data['csrf_token'] !== $_SESSION['csrf_token']) {
         json_error('Invalid security token', 403);
     }
-    
+
     // Validate required fields
-    if (empty($data['title']) || empty($data['event_date']) || empty($data['location']) || 
+    if (empty($data['title']) || empty($data['event_date']) || empty($data['location']) ||
         empty($data['description']) || !isset($data['price'])) {
         json_error('Missing required fields');
     }
-    
+
     try {
         $stmt = $db->prepare("
-            INSERT INTO events (title, event_date, location, description, price, image_path, status, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+            INSERT INTO events (title, event_date, time_start, location, distances, description, price, image_path, status, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
         ");
-        
+
         $stmt->execute([
             $data['title'],
             $data['event_date'],
+            $data['time_start'] ?? null,
             $data['location'],
+            $data['distances'] ?? null,
             $data['description'],
             $data['price'],
             $data['image_path'] ?? null,
             $data['status'] ?? 'active'
         ]);
-        
+
         json_success(['id' => $db->lastInsertId()]);
     } catch (PDOException $e) {
         json_error('Database error: ' . $e->getMessage(), 500);
@@ -64,27 +66,27 @@ if ($method === 'POST') {
 // PUT - Update existing event
 if ($method === 'PUT') {
     $data = json_decode(file_get_contents('php://input'), true);
-    
+
     // Validate CSRF
     if (!isset($data['csrf_token']) || $data['csrf_token'] !== $_SESSION['csrf_token']) {
         json_error('Invalid security token', 403);
     }
-    
+
     // Validate required fields
-    if (empty($data['id']) || empty($data['title']) || empty($data['event_date']) || 
+    if (empty($data['id']) || empty($data['title']) || empty($data['event_date']) ||
         empty($data['location']) || empty($data['description']) || !isset($data['price'])) {
         json_error('Missing required fields');
     }
-    
+
     try {
         // Get old image path if updating with new image
         if (!empty($data['image_path'])) {
             $stmt = $db->prepare("SELECT image_path FROM events WHERE id = ?");
             $stmt->execute([$data['id']]);
             $old_event = $stmt->fetch();
-            
+
             // Delete old image if it's different from the new one
-            if ($old_event && !empty($old_event['image_path']) && 
+            if ($old_event && !empty($old_event['image_path']) &&
                 $old_event['image_path'] !== $data['image_path']) {
                 $old_image = __DIR__ . '/../../images/events/' . $old_event['image_path'];
                 if (file_exists($old_image)) {
@@ -92,25 +94,27 @@ if ($method === 'PUT') {
                 }
             }
         }
-        
+
         $stmt = $db->prepare("
-            UPDATE events 
-            SET title = ?, event_date = ?, location = ?, description = ?,
+            UPDATE events
+            SET title = ?, event_date = ?, time_start = ?, location = ?, distances = ?, description = ?,
                 price = ?, image_path = ?, status = ?, updated_at = NOW()
             WHERE id = ?
         ");
-        
+
         $stmt->execute([
             $data['title'],
             $data['event_date'],
+            $data['time_start'] ?? null,
             $data['location'],
+            $data['distances'] ?? null,
             $data['description'],
             $data['price'],
             $data['image_path'] ?? null,
             $data['status'] ?? 'active',
             $data['id']
         ]);
-        
+
         json_success(null);
     } catch (PDOException $e) {
         json_error('Database error: ' . $e->getMessage(), 500);
@@ -120,26 +124,26 @@ if ($method === 'PUT') {
 // DELETE - Remove event
 if ($method === 'DELETE') {
     $data = json_decode(file_get_contents('php://input'), true);
-    
+
     // Validate CSRF
     if (!isset($data['csrf_token']) || $data['csrf_token'] !== $_SESSION['csrf_token']) {
         json_error('Invalid security token', 403);
     }
-    
+
     if (empty($data['id'])) {
         json_error('Event ID is required');
     }
-    
+
     try {
         // Get image path before deleting
         $stmt = $db->prepare("SELECT image_path FROM events WHERE id = ?");
         $stmt->execute([$data['id']]);
         $event = $stmt->fetch();
-        
+
         // Delete the database record
         $stmt = $db->prepare("DELETE FROM events WHERE id = ?");
         $stmt->execute([$data['id']]);
-        
+
         // Delete the image file if it exists
         if ($event && !empty($event['image_path'])) {
             $image_file = __DIR__ . '/../../images/events/' . $event['image_path'];
@@ -147,7 +151,7 @@ if ($method === 'DELETE') {
                 unlink($image_file);
             }
         }
-        
+
         json_success(null);
     } catch (PDOException $e) {
         json_error('Database error: ' . $e->getMessage(), 500);

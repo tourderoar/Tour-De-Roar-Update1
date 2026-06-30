@@ -53,6 +53,52 @@ require_once __DIR__ . '/includes/header.php';
 // Global variable to store events data
 let eventsData = [];
 
+function formatEventDate(rawDate) {
+    if (!rawDate) {
+        return 'TBA';
+    }
+
+    // Treat YYYY-MM-DD as a calendar date, not a UTC timestamp.
+    const match = String(rawDate).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!match) {
+        return rawDate;
+    }
+
+    const year = parseInt(match[1], 10);
+    const month = parseInt(match[2], 10) - 1;
+    const day = parseInt(match[3], 10);
+    const localDate = new Date(year, month, day);
+
+    return localDate.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        weekday: 'long'
+    });
+}
+
+function formatEventTime(rawTime) {
+    if (!rawTime) {
+        return 'TBA';
+    }
+
+    // Accept DB TIME values like HH:MM or HH:MM:SS and convert to 12-hour format.
+    const match = String(rawTime).match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
+    if (!match) {
+        return rawTime;
+    }
+
+    let hour = parseInt(match[1], 10);
+    const minute = match[2];
+    const suffix = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12;
+    if (hour === 0) {
+        hour = 12;
+    }
+
+    return `${hour}:${minute} ${suffix}`;
+}
+
 // Load events from API
 $(document).ready(function() {
     $.ajax({
@@ -75,8 +121,7 @@ $(document).ready(function() {
                 
                 eventsData.forEach((event, index) => {
                     const color = colors[index % colors.length];
-                    const eventDate = new Date(event.event_date);
-                    const dateStr = eventDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+                    const dateStr = event.event_date_display || formatEventDate(event.event_date);
                     
                     const card = `
                         <div class="bg-gradient-to-br ${color.bg} rounded-xl p-6 shadow-xl border-l-4 hover:shadow-2xl transition-all duration-300" style="border-color: ${color.border};">
@@ -96,7 +141,7 @@ $(document).ready(function() {
                                 </div>
                                 <div class="flex items-center text-sm text-gray-600">
                                     <i class="fas fa-clock mr-3 w-4" style="color: ${color.icon};"></i>
-                                    <span><strong>Time:</strong> ${event.time_start || 'TBA'}</span>
+                                    <span><strong>Time:</strong> ${formatEventTime(event.time_start)}</span>
                                 </div>
                                 <div class="flex items-center text-sm text-gray-600">
                                     <i class="fas fa-map-marker-alt mr-3 w-4" style="color: ${color.icon};"></i>

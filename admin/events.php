@@ -116,6 +116,11 @@ $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                     
                     <div class="form-group">
+                        <label class="form-label">Start Time</label>
+                        <input type="time" id="event-time-start" name="time_start" class="form-input" step="60">
+                    </div>
+                    
+                    <div class="form-group">
                         <label class="form-label">Price ($) *</label>
                         <input type="number" id="event-price" name="price" class="form-input" step="0.01" min="0" required>
                     </div>
@@ -124,6 +129,11 @@ $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="form-group">
                     <label class="form-label">Location *</label>
                     <input type="text" id="event-location" name="location" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Distances</label>
+                    <input type="text" id="event-distances" name="distances" class="form-input" placeholder="e.g. 5km, 10km, 20km">
                 </div>
                 
                 <div class="form-group">
@@ -190,7 +200,9 @@ function editEvent(event) {
     document.getElementById('event-id').value = event.id;
     document.getElementById('event-title').value = event.title;
     document.getElementById('event-date').value = event.event_date;
+    document.getElementById('event-time-start').value = event.time_start || '';
     document.getElementById('event-location').value = event.location;
+    document.getElementById('event-distances').value = event.distances || '';
     document.getElementById('event-price').value = event.price;
     document.getElementById('event-description').value = event.description;
     document.getElementById('event-image').value = event.image_path || '';

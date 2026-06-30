@@ -122,6 +122,20 @@ function is_admin_logged_in(): bool
 }
 
 /**
+ * Returns true if the currently logged-in admin is a super admin.
+ *
+ * @return bool
+ */
+function is_super_admin(): bool
+{
+    if (!is_admin_logged_in()) {
+        return false;
+    }
+    
+    return ($_SESSION['admin']['admin_type'] ?? 'admin') === 'super_admin';
+}
+
+/**
  * Returns the CSRF token string for the current session.
  * Used by header.php to inject the token into the page's <meta> tag.
  *

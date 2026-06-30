@@ -77,6 +77,10 @@ try {
                             json_error('Admin endpoint not found', 404);
                         }
                         break;
+                    case 'admins':
+                        // GET /api/admin/admins or GET /api/admin/admins/{id}
+                        require __DIR__ . '/admin/admins.php';
+                        break;
                     default:
                         json_error('Admin endpoint not found', 404);
                 }
@@ -157,6 +161,10 @@ try {
                     case 'donations':
                     case 'gallery':
                         require __DIR__ . '/admin/' . $admin_resource . '.php';
+                        break;
+                    case 'admins':
+                        // POST /api/admin/admins - create new admin
+                        require __DIR__ . '/admin/admins.php';
                         break;
                     default:
                         json_error('Admin endpoint not found', 404);
@@ -247,6 +255,15 @@ try {
                     case 'donations':
                     case 'gallery':
                         require __DIR__ . '/admin/' . $admin_resource . '.php';
+                        break;
+                    case 'profile':
+                    case 'password':
+                        // PUT /api/admin/profile or PUT /api/admin/password
+                        require __DIR__ . '/admin/profile.php';
+                        break;
+                    case 'admins':
+                        // PUT /api/admin/admins/{id} - update admin
+                        require __DIR__ . '/admin/admins.php';
                         break;
                     default:
                         json_error('Admin endpoint not found', 404);
