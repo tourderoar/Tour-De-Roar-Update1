@@ -18,7 +18,7 @@ RewriteEngine On
 # ── RewriteBase ──────────────────────────────────────────────────────────
 # LOCAL:      Project is in a subdirectory of htdocs
 # PRODUCTION: Change this to / when the project is at the domain root
-RewriteBase /tour_update/
+RewriteBase /tour_update/tour/
 
 # ── Security: block direct access to config.php ─────────────────────────
 # config.php contains credentials — it must never be served as a web page.

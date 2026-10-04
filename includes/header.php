@@ -31,10 +31,17 @@ $page_title = $page_title ?? 'Tour de Roar';
 // Strips the RewriteBase prefix and .php extension to get a clean identifier.
 // -----------------------------------------------------------------------
 $current_uri  = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
-$current_page = strtolower(basename($current_uri, '.php'));
+
+// Strip the install path (e.g. /tour_update/tour) so the check works at any depth
+$app_path = rtrim(parse_url(APP_URL, PHP_URL_PATH) ?? '', '/');
+if ($app_path !== '' && strpos($current_uri, $app_path) === 0) {
+    $current_uri = substr($current_uri, strlen($app_path));
+}
+
+$current_page = strtolower(basename(trim($current_uri, '/'), '.php'));
 
 // Root paths all map to 'index'
-if ($current_page === '' || $current_page === 'tour_update' || $current_page === '/') {
+if ($current_page === '') {
     $current_page = 'index';
 }
 

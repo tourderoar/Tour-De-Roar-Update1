@@ -36,8 +36,8 @@ if (!defined('APP_URL')) {
                     <span class="text-xl font-bold logo-colors">Tour de Roar</span>
                 </div>
                 <p class="text-gray-400 text-sm leading-relaxed mb-5">
-                    Cycling for the children of Mpumalanga. Every pedal stroke funds education,
-                    nutrition, and hope for vulnerable children in our community.
+                    Every child is our child. Every pedal stroke helps fund education, healthcare, nutrition, and
+                    hope for vulnerable children in communities around the world.
                 </p>
                 <!-- Social links -->
                 <div class="flex items-center space-x-4">

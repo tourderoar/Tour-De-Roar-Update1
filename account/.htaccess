@@ -14,7 +14,7 @@
 Options -Indexes
 
 RewriteEngine On
-RewriteBase /tour_update/account/
+RewriteBase /tour_update/tour/account/
 
 # Root /account request → dashboard.php
 RewriteRule ^$ dashboard.php [L]

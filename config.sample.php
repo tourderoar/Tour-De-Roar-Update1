@@ -48,8 +48,8 @@ define('APP_ENV', getenv('APP_ENV') ?: $detected_env);
 // LOCAL:      Project lives in a subdirectory of htdocs
 // PRODUCTION: Project files are at the domain root — adjust if different
 if (APP_ENV === 'local') {
-    // Change 'tour_update' to match your local folder name
-    define('APP_URL', 'http://localhost/tour_update');
+    // Change 'tour_update/tour' to match your local folder path under htdocs
+    define('APP_URL', 'http://localhost/tour_update/tour');
 } else {
     // On production, read from a server environment variable set in Apache/Nginx config.
     // Apache example (in VirtualHost block): SetEnv APP_URL "https://yourdomain.com"

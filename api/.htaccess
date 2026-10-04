@@ -8,8 +8,13 @@
 
 Options -Indexes
 
+# Endpoint names collide with real folders here (donations/, events/, user/ ...).
+# Without this, mod_dir 301s /api/donations -> /api/donations/ before the rewrite,
+# and a redirected POST is re-issued as GET with no body.
+DirectorySlash Off
+
 RewriteEngine On
-RewriteBase /tour_update/api/
+RewriteBase /tour_update/tour/api/
 
 # Route everything to index.php (except index.php itself to avoid loops)
 # This ensures all API requests go through the router, not the endpoint files directly

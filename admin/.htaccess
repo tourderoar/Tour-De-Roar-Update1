@@ -13,7 +13,7 @@
 Options -Indexes
 
 RewriteEngine On
-RewriteBase /tour_update/admin/
+RewriteBase /tour_update/tour/admin/
 
 # Root /admin request → index.php (dashboard)
 RewriteRule ^$ index.php [L]

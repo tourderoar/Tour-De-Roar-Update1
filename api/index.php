@@ -41,10 +41,8 @@ $request_uri = $_SERVER['REQUEST_URI'];
 $request_method = $_SERVER['REQUEST_METHOD'];
 
 // Remove base path and query string
-$base_path = '/tour_update/api';
-if (APP_ENV === 'production') {
-    $base_path = '/api'; // Adjust for production if needed
-}
+// Derived from APP_URL so it stays correct wherever the app is installed
+$base_path = rtrim(parse_url(APP_URL, PHP_URL_PATH) ?? '', '/') . '/api';
 
 // Strip base path
 $path = str_replace($base_path, '', parse_url($request_uri, PHP_URL_PATH));
