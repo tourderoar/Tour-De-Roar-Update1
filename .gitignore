@@ -39,4 +39,8 @@ Thumbs.db
 *~
 *.tmp
 
+# Archives
+*.zip
+
 setup/
+cookie.txt
