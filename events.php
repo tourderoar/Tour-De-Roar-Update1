@@ -376,6 +376,9 @@ document.addEventListener('DOMContentLoaded', function() {
 </section>
 
 <!-- Past Events Section -->
+<?php /* TEMPORARILY DISABLED: 2024 ride results pending verification. Remove the
+     if(false)/endif wrapper below to restore. */ ?>
+<?php if (false): ?>
 <section class="content-section bg-white">
     <div class="container mx-auto px-6">
         <h2 class="text-4xl font-bold text-center mb-12" style="color: #805AD5;">Past Events Highlights</h2>
@@ -409,6 +412,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
 </section>
+<?php endif; ?>
 
 <!-- Registration Info Section -->
 <section class="content-section bg-gradient-to-r from-orange-50 to-red-50">

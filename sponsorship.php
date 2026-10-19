@@ -139,6 +139,9 @@ require_once __DIR__ . '/includes/header.php';
 <section class="py-16 bg-blue-600 text-white">
     <div class="max-w-4xl mx-auto px-4 text-center">
         <h2 class="text-4xl font-bold mb-8">Your Sponsorship Creates Lasting Impact</h2>
+        <?php /* TEMPORARILY DISABLED: impact figures pending verification. Remove the
+             if(false)/endif wrapper below to restore. */ ?>
+        <?php if (false): ?>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <div>
                 <div class="text-4xl font-bold text-yellow-300">500+</div>
@@ -153,6 +156,7 @@ require_once __DIR__ . '/includes/header.php';
                 <p class="text-xl">Raised for children's programs</p>
             </div>
         </div>
+        <?php endif; ?>
         <p class="text-xl mb-8">
             When you sponsor Tour de Roar, you're not just supporting cycling events – you're investing in children's health, 
             building stronger communities, and creating opportunities for families to stay active together.

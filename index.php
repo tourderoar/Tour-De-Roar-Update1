@@ -69,6 +69,9 @@ require_once __DIR__ . '/includes/header.php';
 </section>
 
 <!-- Quick Stats Section -->
+<?php /* TEMPORARILY DISABLED: impact figures pending verification. Remove the
+     if(false)/endif wrapper below to restore. */ ?>
+<?php if (false): ?>
 <section class="content-section bg-gradient-to-r from-purple-50 to-orange-50">
     <div class="container mx-auto px-6">
         <h2 class="text-4xl font-bold text-center mb-12" style="color: #805AD5;">Our Impact</h2>
@@ -96,6 +99,7 @@ require_once __DIR__ . '/includes/header.php';
         </div>
     </div>
 </section>
+<?php endif; ?>
 
 <!-- Call to Action Section -->
 <section class="content-section bg-white">

@@ -32,6 +32,9 @@ require_once __DIR__ . '/includes/header.php';
             </p>
         </div>
 
+        <?php /* TEMPORARILY DISABLED: impact figures pending verification. Remove the
+             if(false)/endif wrapper below to restore. */ ?>
+        <?php if (false): ?>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
             <div class="text-center">
                 <div class="bg-blue-100 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4">
@@ -65,6 +68,7 @@ require_once __DIR__ . '/includes/header.php';
                 <p class="text-gray-600">Community events hosted</p>
             </div>
         </div>
+        <?php endif; ?>
 
         <!-- What Your Donation Does (Hardcoded) -->
         <div class="bg-gray-50 rounded-lg p-8">
@@ -195,6 +199,9 @@ require_once __DIR__ . '/includes/header.php';
 </section>
 
 <!-- Stories of Impact -->
+<?php /* TEMPORARILY DISABLED: testimonials pending permission to quote.
+     Remove the if(false)/endif wrapper below to restore. */ ?>
+<?php if (false): ?>
 <section class="py-16 bg-gray-100">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
@@ -256,8 +263,12 @@ require_once __DIR__ . '/includes/header.php';
         </div>
     </div>
 </section>
+<?php endif; ?>
 
 <!-- Tax Information -->
+<?php /* TEMPORARILY DISABLED: 501(c)(3) status, Tax ID and the 95%-to-programs
+     figure pending verification. Remove the if(false)/endif wrapper to restore. */ ?>
+<?php if (false): ?>
 <section class="py-16 bg-blue-600 text-white">
     <div class="max-w-4xl mx-auto px-4 text-center">
         <h2 class="text-3xl font-bold mb-8">Your Donation is Tax-Deductible</h2>
@@ -290,6 +301,7 @@ require_once __DIR__ . '/includes/header.php';
         </div>
     </div>
 </section>
+<?php endif; ?>
 
 <!-- Donation Payment Modal -->
 <div id="donation-modal" class="payment-modal-overlay" style="display: none;">
