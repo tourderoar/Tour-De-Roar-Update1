@@ -77,6 +77,15 @@ function formatEventDate(rawDate) {
     });
 }
 
+// True when a DB field has a real value (not null, blank, or the string "null").
+function hasEventValue(value) {
+    if (value === null || value === undefined) {
+        return false;
+    }
+    const text = String(value).trim();
+    return text !== '' && text.toLowerCase() !== 'null';
+}
+
 function formatEventTime(rawTime) {
     if (!rawTime) {
         return 'TBA';
@@ -139,18 +148,21 @@ $(document).ready(function() {
                                     <i class="fas fa-calendar mr-3 w-4" style="color: ${color.icon};"></i>
                                     <span><strong>Date:</strong> ${dateStr}</span>
                                 </div>
+                                ${hasEventValue(event.time_start) ? `
                                 <div class="flex items-center text-sm text-gray-600">
                                     <i class="fas fa-clock mr-3 w-4" style="color: ${color.icon};"></i>
                                     <span><strong>Time:</strong> ${formatEventTime(event.time_start)}</span>
-                                </div>
+                                </div>` : ''}
+                                ${hasEventValue(event.location) ? `
                                 <div class="flex items-center text-sm text-gray-600">
                                     <i class="fas fa-map-marker-alt mr-3 w-4" style="color: ${color.icon};"></i>
                                     <span><strong>Location:</strong> ${event.location}</span>
-                                </div>
+                                </div>` : ''}
+                                ${hasEventValue(event.distances) ? `
                                 <div class="flex items-center text-sm text-gray-600">
                                     <i class="fas fa-route mr-3 w-4" style="color: ${color.icon};"></i>
                                     <span><strong>Distances:</strong> ${event.distances}</span>
-                                </div>
+                                </div>` : ''}
                                 <div class="flex items-center text-sm text-gray-600">
                                     <i class="fas fa-dollar-sign mr-3 w-4" style="color: ${color.icon};"></i>
                                     <span><strong>Registration:</strong> $${parseFloat(event.price).toFixed(2)}</span>

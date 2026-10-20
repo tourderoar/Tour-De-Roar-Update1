@@ -4,7 +4,9 @@
  * Location: /tour_update/api/events/index.php
  *
  * GET /api/events
- * Returns all active events from the database.
+ * Returns active upcoming events (today or later) from the database.
+ * Past events are excluded so the public site never offers registration for them.
+ * Admin pages use /api/admin/events, which still lists every event.
  * No authentication required (public endpoint).
  */
 
@@ -25,6 +27,7 @@ try {
             created_at
         FROM events
         WHERE status = 'active'
+          AND event_date >= CURDATE()
         ORDER BY event_date ASC
     ");
     
