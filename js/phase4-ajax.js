@@ -250,8 +250,9 @@ function loadFeaturedEvents() {
                 const featured = response.data.slice(0, 3);
                 
                 featured.forEach((event) => {
-                    const eventDate = new Date(event.event_date);
-                    const dateStr = eventDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                    // Prefer the server-formatted date; new Date('YYYY-MM-DD') parses as UTC and shows the previous day in US time zones.
+                    const dateStr = event.event_date_display || event.event_date;
+                    const hasLocation = event.location && String(event.location).trim() !== '' && String(event.location).trim().toLowerCase() !== 'null';
                     
                     const card = `
                         <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-shadow duration-300">
@@ -259,15 +260,16 @@ function loadFeaturedEvents() {
                                 <img src="${APP_URL}/images/events/${event.image_path}" alt="${event.title}" class="gallery-img">
                             </div>
                             <h3 class="text-xl font-bold mb-2" style="color: #805AD5;">${event.title}</h3>
-                            <p class="text-gray-600 mb-4">${event.description.substring(0, 120)}...</p>
+                            <p class="text-gray-600 mb-4">${(event.description || '').substring(0, 120)}...</p>
                             <div class="flex items-center text-sm text-gray-600 mb-2">
                                 <i class="fas fa-calendar mr-2" style="color: #FF6B1A;"></i>
                                 <span>${dateStr}</span>
                             </div>
+                            ${hasLocation ? `
                             <div class="flex items-center text-sm text-gray-600 mb-4">
                                 <i class="fas fa-map-marker-alt mr-2" style="color: #FF6B1A;"></i>
                                 <span>${event.location}</span>
-                            </div>
+                            </div>` : '<div class="mb-4"></div>'}
                             <a href="${APP_URL}/events" class="inline-block bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-2 rounded-lg hover:shadow-lg transition-shadow">
                                 Learn More
                             </a>

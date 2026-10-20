@@ -17,6 +17,21 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 // Validate CSRF token
 require_csrf();
 
+// Team inbox for each subject value in contact.php's <select id="subject">.
+// Keep this map in sync if subjects are added or renamed there.
+const CONTACT_ROUTES = [
+    'general'       => ['label' => 'General Information',      'inbox' => 'info@tourderoar.org'],
+    'media'         => ['label' => 'Media Inquiry',            'inbox' => 'info@tourderoar.org'],
+    'other'         => ['label' => 'Other',                    'inbox' => 'info@tourderoar.org'],
+    'events'        => ['label' => 'Event Registration',       'inbox' => 'events@tourderoar.org'],
+    'bike-donation' => ['label' => 'Bike Donation',            'inbox' => 'events@tourderoar.org'],
+    'volunteer'     => ['label' => 'Volunteer Opportunities',  'inbox' => 'partners@tourderoar.org'],
+    'sponsorship'   => ['label' => 'Sponsorship Inquiry',      'inbox' => 'partners@tourderoar.org'],
+    'donation'      => ['label' => 'Donation Questions',       'inbox' => 'partners@tourderoar.org'],
+    'partnership'   => ['label' => 'Partnership Opportunity',  'inbox' => 'partners@tourderoar.org'],
+];
+const CONTACT_DEFAULT_INBOX = 'info@tourderoar.org';
+
 // Get JSON input
 $input = json_decode(file_get_contents('php://input'), true);
 
@@ -112,7 +127,40 @@ try {
     ";
     
     send_mail($email, $name, $email_subject, $email_body);
-    
+
+    // Route the submission to the team inbox that owns this subject
+    $route = CONTACT_ROUTES[$subject] ?? null;
+    $team_inbox = $route['inbox'] ?? CONTACT_DEFAULT_INBOX;
+    $subject_label = htmlspecialchars($route['label'] ?? $subject);
+    $safe_name = htmlspecialchars($name);
+    $safe_email = htmlspecialchars($email);
+
+    $team_subject = "New Contact Form Submission: " . ($route['label'] ?? $subject) . " — {$name}";
+    $team_body = "
+        <h2 style='color: #805AD5;'>New Contact Form Submission</h2>
+        <p>A new message has been received through the tourderoar.org contact form.</p>
+
+        <div style='background: #f7fafc; padding: 20px; border-radius: 8px; margin: 20px 0;'>
+            <p><strong>From:</strong> {$safe_name}</p>
+            <p><strong>Email:</strong> <a href='mailto:{$safe_email}'>{$safe_email}</a></p>
+            <p><strong>Subject:</strong> {$subject_label}</p>
+            <p><strong>Submitted:</strong> " . date('F j, Y g:i A') . "</p>
+        </div>
+
+        <div style='background: #ffffff; padding: 20px; border-left: 4px solid #FF6B1A; margin: 20px 0;'>
+            <p><strong>Message:</strong></p>
+            <p>" . nl2br(htmlspecialchars($message)) . "</p>
+        </div>
+
+        <p style='color: #718096; font-size: 14px; margin-top: 30px;'>
+            <strong>Action Required:</strong> Please reply to {$safe_email} within 24 hours.
+        </p>
+    ";
+
+    if (!send_mail($team_inbox, 'Tour de Roar', $team_subject, $team_body)) {
+        error_log("Contact form: failed to deliver submission to {$team_inbox}");
+    }
+
     // Notify all admins about the new contact form submission
     $stmt = $db->prepare("SELECT email, name FROM admins WHERE status = 'active'");
     $stmt->execute();

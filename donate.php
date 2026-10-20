@@ -157,9 +157,16 @@ require_once __DIR__ . '/includes/header.php';
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-2">Share Our Story</h3>
                 <p class="text-gray-600 mb-4">Help us reach more families by sharing our mission on social media</p>
-                <a href="#" onclick="alert('Share functionality will be added in a future phase'); return false;" class="text-blue-600 font-bold hover:text-blue-800 transition-colors">
+                <?php $donate_share_url = APP_URL . '/donate'; ?>
+                <!-- href is a no-JS fallback; JS below uses the native share sheet or copies the link -->
+                <a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode($donate_share_url) ?>" id="share-now-link" data-share-url="<?= htmlspecialchars($donate_share_url, ENT_QUOTES) ?>" target="_blank" rel="noopener" class="text-blue-600 font-bold hover:text-blue-800 transition-colors">
                     Share Now
                 </a>
+                <p id="share-feedback" class="hidden text-sm text-green-700 mt-2" role="status" aria-live="polite"></p>
+                <div id="share-fallback-links" class="hidden mt-2 space-x-4 text-sm">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode($donate_share_url) ?>" target="_blank" rel="noopener" class="text-blue-600 hover:text-blue-800"><i class="fab fa-facebook mr-1"></i>Facebook</a>
+                    <a href="https://twitter.com/intent/tweet?url=<?= urlencode($donate_share_url) ?>&amp;text=<?= urlencode('Support Tour de Roar and help children in need') ?>" target="_blank" rel="noopener" class="text-blue-600 hover:text-blue-800">X (Twitter)</a>
+                </div>
             </div>
 
             <div class="text-center p-6 bg-green-50 rounded-lg">
@@ -511,6 +518,36 @@ require_once __DIR__ . '/includes/header.php';
 
 <script src="<?= APP_URL ?>/js/phase4-ajax.js"></script>
 <script>
+// Share Now: native share sheet when available, otherwise copy the donate URL
+$(document).on('click', '#share-now-link', function(e) {
+    const shareUrl = $(this).data('share-url');
+    const $feedback = $('#share-feedback');
+
+    if (navigator.share) {
+        e.preventDefault();
+        navigator.share({
+            title: 'Donate to Tour de Roar',
+            text: 'Support Tour de Roar and help children in need',
+            url: shareUrl
+        }).catch(function() {
+            // User cancelled or share failed; nothing to do
+        });
+        return;
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+        e.preventDefault();
+        navigator.clipboard.writeText(shareUrl).then(function() {
+            $feedback.text('Link copied! Paste it anywhere, or share directly:').removeClass('hidden');
+            $('#share-fallback-links').removeClass('hidden');
+        }).catch(function() {
+            $feedback.text('Share directly:').removeClass('hidden');
+            $('#share-fallback-links').removeClass('hidden');
+        });
+    }
+    // Otherwise let the link open the Facebook share page in a new tab
+});
+
 // Initialize Stripe for donations
 const donationStripe = Stripe(STRIPE_PK);
 const donationElements = donationStripe.elements();
