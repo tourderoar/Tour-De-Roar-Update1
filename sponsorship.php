@@ -238,6 +238,14 @@ require_once __DIR__ . '/includes/header.php';
     </div>
 </section>
 
+<!-- Waitlist Section (MailerLite embedded form: TdR Waitlist Signup) -->
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-6">
+        <h2 class="text-4xl font-bold text-gray-900 mb-8 text-center">Join the Waitlist</h2>
+        <div class="ml-embedded" data-form="muXryK"></div>
+    </div>
+</section>
+
 <!-- Sponsorship Payment Modal -->
 <div id="sponsorship-modal" class="payment-modal-overlay" style="display: none;">
     <div class="payment-modal-content">

@@ -169,6 +169,14 @@ require_once __DIR__ . '/includes/header.php';
     </div>
 </section>
 
+<!-- Waitlist Section (MailerLite embedded form: TdR Waitlist Signup) -->
+<section class="content-section bg-white">
+    <div class="container mx-auto px-6">
+        <h2 class="text-4xl font-bold mb-8 text-center" style="color: #805AD5;">Join the Waitlist</h2>
+        <div class="ml-embedded" data-form="muXryK"></div>
+    </div>
+</section>
+
 <!-- Registration Modal (placeholder — will be replaced with real payment flow in Phase 6) -->
 <div id="registrationModal" class="modal">
     <div class="modal-content">
