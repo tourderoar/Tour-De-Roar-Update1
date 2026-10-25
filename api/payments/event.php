@@ -60,7 +60,7 @@ try {
     
     // Get event details
     $stmt = $db->prepare("
-        SELECT id, title, price, status 
+        SELECT id, title, price, status, event_date, (event_date < CURDATE()) AS is_past
         FROM events 
         WHERE id = ? AND status = 'active'
     ");
@@ -69,6 +69,11 @@ try {
     
     if (!$event) {
         json_error('Event not found or not available', 404);
+    }
+    
+    // Block registration for events whose date has already passed
+    if ((int)$event['is_past'] === 1) {
+        json_error('Registration for this event has closed', 400);
     }
     
     $amount = $event['price'];
